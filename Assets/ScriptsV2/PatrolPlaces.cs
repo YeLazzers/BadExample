@@ -2,18 +2,20 @@ using UnityEngine;
 
 public class PatrolPlaces : MonoBehaviour
 {
-    [SerializeField] Transform _placesGroup;
+    [SerializeField] private Transform _placesGroup;
 
     private float _speed;
     private Transform[] _places;
-    private int _currentPlaceIndex = 0;
+    private int _currentPlaceIndex = -1;
 
     private void Start()
     {
         _places = new Transform[_placesGroup.childCount];
 
-        for (int childIndex = 0; childIndex < _placesGroup.childCount; childIndex++)
-            _places[childIndex] = _placesGroup.GetChild(childIndex).transform;
+        for (int childIndex = 0; childIndex < _places.Length; childIndex++)
+            _places[childIndex] = _placesGroup.GetChild(childIndex);
+
+        SwitchNextPlace();
     }
 
     private void Update()
@@ -21,12 +23,13 @@ public class PatrolPlaces : MonoBehaviour
         Vector3 nextPosition = _places[_currentPlaceIndex].position;
         transform.position = Vector3.MoveTowards(transform.position, nextPosition, _speed * Time.deltaTime);
 
-        if (transform.position == nextPosition) ChangeNextPlace();
+        if (transform.position == nextPosition)
+            SwitchNextPlace();
     }
 
-    private void ChangeNextPlace()
+    private void SwitchNextPlace()
     {
-        _currentPlaceIndex = (_currentPlaceIndex + 1) % _places.Length;
-        transform.forward = _places[_currentPlaceIndex].transform.position;
+        int nextIndex = ++_currentPlaceIndex % _places.Length;
+        transform.forward = _places[nextIndex].transform.position - transform.position;
     }
 }
