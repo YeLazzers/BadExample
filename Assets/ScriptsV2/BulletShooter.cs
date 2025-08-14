@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BulletShooter: MonoBehaviour
 {
-    [SerializeField] private Rigidbody _bulletPrefab;
+    [SerializeField] private Bullet _bulletPrefab;
     [SerializeField] private Transform _target;
     [SerializeField] private float _attackRate;
     [SerializeField] private float _bulletSpeed;
@@ -25,10 +25,9 @@ public class BulletShooter: MonoBehaviour
         while (enabled)
         {
             Vector3 direction = (_target.position - transform.position).normalized;
-            Rigidbody bulletRigidBody = Instantiate(_bulletPrefab, transform.position + direction, Quaternion.identity);
+            Instantiate(_bulletPrefab, transform.position, Quaternion.identity)
+                .Initialize(transform.position, direction, _bulletSpeed);
 
-            bulletRigidBody.transform.forward = direction;
-            bulletRigidBody.velocity = direction * _bulletSpeed;
 
             yield return _waitForSecondsToShoot;
         }
