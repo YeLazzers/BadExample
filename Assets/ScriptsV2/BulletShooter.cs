@@ -24,9 +24,8 @@ public class BulletShooter: MonoBehaviour
     {
         while (enabled)
         {
-            Vector3 direction = (_target.position - transform.position).normalized;
             Instantiate(_bulletPrefab, transform.position, Quaternion.identity)
-                .Initialize(transform.position, direction, _bulletSpeed);
+                .Initialize(transform.position, (_target.position - transform.position).normalized, _bulletSpeed);
 
 
             yield return _waitForSecondsToShoot;
